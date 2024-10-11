@@ -1,4 +1,3 @@
-# --- STREAMLIT VERSION ---
 import streamlit as st
 from PIL import Image
 import random
@@ -6,7 +5,7 @@ import random
 # Path to your card images folder
 card_images_path = 'card_images/'
 
-# List of all individual card filenames (excluding card_back.png and orig_cards.gif)
+# List of all individual card filenames
 card_filenames = [
     "2-spades.png", "3-spades.png", "4-spades.png", "5-spades.png",
     "6-spades.png", "7-spades.png", "8-spades.png", "9-spades.png",
@@ -36,24 +35,20 @@ def display_board(deck, flipped_cards, matched_cards):
     cols = st.columns(15)  # Create columns for a larger grid
     for i, card in enumerate(deck):
         col = cols[i % 15]  # Assign the card to the correct column
-        if i in flipped_cards or i in matched_cards:
-            col.image(card, use_column_width=True)  # Show the revealed or matched card
-        else:
-            # Show the card back
-            if col.button("", key=f"card-{i}"):  # Using a button to track clicks
-                st.session_state.flipped_cards.append(i)
-            col.image(Image.open(card_images_path + "card_back.png"), use_column_width=True)
 
-# CSS to disable the "View fullscreen" magnifier icon on images
+        # If the card is flipped or matched, show the image
+        if i in flipped_cards or i in matched_cards:
+            col.image(card, use_column_width=True)
+        else:
+            # Show the button to flip the card
+            if col.button("", key=f"button-{i}"):  # Button click event
+                st.session_state.flipped_cards.append(i)  # Add index to flipped cards
+
+# CSS to center align elements and add styling
 def inject_css():
     st.markdown(
         """
         <style>
-        /* Hide the fullscreen icon (magnifying glass) */
-        button[title="View fullscreen"] {
-            display: none;
-        }
-
         /* Center align the current turn */
         .centered-text {
             display: flex;
@@ -94,7 +89,7 @@ def main_streamlit():
         if 'deck' not in st.session_state:
             initialize_game()
 
-        # Display the current scores on the main page
+        # Display the current scores
         if st.session_state.mode == 'one_player':
             st.write(f"<div class='score-area'>Matches: {st.session_state.scores[0]} / {len(card_filenames)}</div>", unsafe_allow_html=True)
         else:

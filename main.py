@@ -84,6 +84,7 @@ def main_streamlit():
         if st.button("Two Players"):
             st.session_state.mode = 'two_players'
             st.session_state.scores = [0, 0]  # Two scores for two players
+            st.session_state.current_player = 0  # Initialize current player to 0 (first player)
             initialize_game()  # Initialize the game
     else:
         # If mode is already selected, run the game
@@ -115,11 +116,12 @@ def main_streamlit():
             st.session_state.flipped_cards = []
 
 def initialize_game():
+    # Ensure that session state variables are initialized
     st.session_state.deck = initialize_deck(card_filenames, card_images_path)
     st.session_state.flipped_cards = []  # Stores indices of currently flipped cards
     st.session_state.matched_cards = []  # Stores indices of matched cards
-    if st.session_state.mode == 'two_players':
-        st.session_state.current_player = 0  # Track current player (0 or 1)
+    if 'current_player' not in st.session_state:
+        st.session_state.current_player = 0  # Initialize current player to 0 if not already set
 
 # Run the Streamlit app
 if __name__ == "__main__":

@@ -6,9 +6,17 @@ This is a simple Memory Match Game built using Python's **Streamlit** framework.
 
 - **One Player Mode**: Play solo and try to match all pairs of cards.
 - **Two Players Mode**: Two players take turns matching pairs, with scores tracked for each player.
-- **Customizable Cards**: Card images are loaded from the provided folder.
-- **Responsive Design**: The game adjusts to fit within the available browser window size.
 - **Interactive Gameplay**: Cards can be flipped by clicking on buttons, and matches are dynamically tracked.
+
+
+## Try It Out For Your Self
+[Match-Card](https://match-card.streamlit.app/)
+
+
+## Screenshots
+
+![One-Player_mode](One-Player_mode.png)
+![Two-Player_mode](Two-Player_mode.png)
 
 ## Prerequisites
 
@@ -39,17 +47,13 @@ To run this project, you need to have the following installed:
    pip install -r requirements.txt
    ```
 
-   (Ensure that the `requirements.txt` file includes `streamlit` and `Pillow`.)
-
-3. Place your card images in the `card_images` folder. The game currently supports `.png` images of playing cards, but this can be customized.
-
-4. Run the game using Streamlit:
+3. Run the game using Streamlit:
 
    ```bash
    streamlit run main.py
    ```
 
-5. Open the link provided by Streamlit in your web browser to start playing.
+4. Open the link provided by Streamlit in your web browser to start playing.
 
 ## Game Instructions
 
@@ -57,10 +61,6 @@ To run this project, you need to have the following installed:
 - **Two Players Mode**: Click on "Two Players" to start a multiplayer game. Players take turns flipping two cards, and the player with the most matched pairs at the end wins.
 - The game ends when all card pairs are matched.
 
-## Customization
-
-- **Card Images**: You can customize the card images by replacing or adding files to the `card_images` folder. The filenames should follow the same structure used in the `card_filenames` list.
-- **Grid Size**: The board layout currently uses 15 columns, but you can adjust this in the `display_board` function if needed.
 
 ## How it Works
 

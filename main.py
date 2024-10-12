@@ -26,8 +26,12 @@ def initialize_deck(filenames, path):
 
 # Check if two selected cards match
 def match_check(deck, flipped):
+    
+    # Use the lambda to check the match
+    check_match = lambda idx1, idx2: deck[idx1] == deck[idx2]
+    
     if len(flipped) == 2:
-        return deck[flipped[0]] == deck[flipped[1]]
+        return check_match(flipped[0], flipped[1])  
     return False
 
 # Display the memory board of cards

@@ -42,7 +42,8 @@ def display_board(deck, flipped_cards, matched_cards):
         else:
             # Show the button to flip the card
             if col.button("", key=f"button-{i}"):  # Button click event
-                st.session_state.flipped_cards.append(i)  # Add index to flipped cards
+                if len(st.session_state.flipped_cards) < 2:  # Allow flipping only if less than 2 cards are flipped
+                    st.session_state.flipped_cards.append(i)  # Add index to flipped cards
 
 # CSS to center align elements and add styling
 def inject_css():

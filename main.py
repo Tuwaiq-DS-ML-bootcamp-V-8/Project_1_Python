@@ -115,6 +115,14 @@ def main_streamlit():
             # Reset flipped cards after a brief delay
             st.session_state.flipped_cards = []
 
+        # Check if all cards are matched and show a congrats message
+        if len(st.session_state.matched_cards) == len(st.session_state.deck):
+            if st.session_state.mode == 'one_player':
+                st.success("🎉 Congratulations! You've matched all the cards!")
+            else:
+                winner = "Player 1" if st.session_state.scores[0] > st.session_state.scores[1] else "Player 2"
+                st.success(f"🎉 {winner} wins the game! Congratulations!")
+
 def initialize_game():
     # Ensure that session state variables are initialized
     st.session_state.deck = initialize_deck(card_filenames, card_images_path)

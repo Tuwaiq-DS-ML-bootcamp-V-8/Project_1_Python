@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+            letter-spacing: 0.5px;
+            list-style-type: none;
+            font-weight: bold;
+        }
+        header {
+            width: 100%;
+            text-align: center;
+            height: 60px;
+            font-size: 40px;
+            color: purple;
+        }
+        #content {
+            width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20px;
+        }
+        #topPart {
+            width: 100%;
+            height: 50px;
+        }
+        #taskInputText {
+            float: left;
+            width: 590px;
+            height: 50px;
+            padding-left: 10px;
+            padding-right: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 2px solid black;
+            outline: none;
+        }
+        #priority {
+            width: 130px;
+            height: 50px;
+            margin-left: 10px;
+            background-color: white;
+            border-color: blue;
+            color: blue;
+            cursor: pointer;
+            border-radius: 5px;
+            padding-left: 10px;
+            font-size: 16px;
+        }
+        #taskInputSubmit {
+            float: right;
+            width: 50px;
+            height: 50px;
+            padding-left: 10px;
+            padding-right: 10px;
+            font-size: 32px;
+            margin-left: 10px;
+            background-color: white;
+            border-color: blue;
+            color: blue;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #centerPart {
+            width: 100%;
+            margin-top: 20px;
+        }
+        #info {
+            width: 100%;
+            height: 40px;
+            margin-top: 10px;
+            border-bottom: 2px dotted black;
+        }
+        .info {
+            width: 200px;
+            height: 40px;
+            float: left;
+            margin-left: 10px;
+            font-size: 20px;
+            padding: 7px;
+        }
+        #centerPart ul {
+            margin-top: 15px;
+        }
+        #centerPart ul li {
+            width: 100%;
+            min-height: 40px;
+            margin-bottom: 40px;
+        }
+        .taskText {
+            float: left;
+            width: 700px;
+            background-color: white;
+            border: none;
+            font-size: 16px;
+            text-align: left;
+            cursor: pointer;
+            padding-top: 5px;
+        }
+        .red {
+            color: red;
+        }
+        .orange {
+            color: orange;
+        }
+        .green {
+            color: green;
+        }
+        .true {
+            float: left;
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border: none;
+            font-size: 34px;
+        }
+        .delete {
+            float: right;
+            width: 60px;
+            height: 40px;
+            background-color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .delete img {
+            width: 45px;
+            height: 40px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>To-Do List</header>
+    <div id="content">
+        <div id="topPart">
+            <input type="text" name="Task" id="taskInputText" placeholder="Add Task">
+            <select name="priority" id="priority">
+                <option value="0" selected disabled hidden>Priority</option>
+                <option value="1" id="high">High</option>
+                <option value="2" id="medium">Medium</option>
+                <option value="3" id="low">Low</option>
+            </select>
+            <button id="taskInputSubmit" onclick="add_task()">+</button>
+        </div>
+        <div id="centerPart">
+         
+            <ul>
+                {% if li %}
+                {% for l in li %}
+                <li>
+                    <button class="taskText {% if l['priority'] == 1 %} red {% elif l['priority'] == 2 %} orange {% elif l['priority'] == 3 %} green {% endif %}" onclick="edit_task({{ l['id'] }})">
+                        {{ l['task'] }}
+                    </button>
+                    {% if l['is_complated'] %}
+                    <button class="true">✓</button>
+                    {% endif %}
+                    <button class="delete" onclick="delete_task({{ l['id'] }})"><img src="/static/icon/trash.png" alt="Delete Icon"></button>
+                </li>
+                {% endfor %}
+                {% else %}
+
+                {% endif %}
+            </ul>
+        </div>
+        <p>Number of tasks are {{count}}</p>
+    </div>
+
+    <script>
+        function add_task() {
+            let task = document.getElementById("taskInputText").value.trim();
+            let priority = document.getElementById("priority").value;
+            
+            if(task != "" & priority != 0) {
+                let xhr = new XMLHttpRequest();
+                let url = "/add";
+       
+                // open a connection
+                xhr.open("POST", url, true);
+    
+                // Set the request header i.e. which type of content you are sending
+                xhr.setRequestHeader("Content-Type", "application/json");
+    
+                // Create a state change callback
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        location.reload(); 
+                    } else if (xhr.readyState === 4 && xhr.status === 404) {
+                        alert(this.responseText);
+                    }
+                };
+    
+                // Converting JSON data to string
+                var data = JSON.stringify({ "task": task, "priority": priority });
+    
+                // Sending data with the request
+                xhr.send(data);
+
+            } else {
+                alert("Please enter some text");
+            }
+        }
+        function delete_task(id = 0) {
+            if(id != 0 & typeof id == "number") {
+                let xhr = new XMLHttpRequest();
+                let url = "/delete";
+
+
+                // open a connection
+                xhr.open("POST", url, true);
+    
+                // Set the request header i.e. which type of content you are sending
+                xhr.setRequestHeader("Content-Type", "application/json");
+    
+                // Create a state change callback
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        location.reload(); 
+                    } else if (xhr.readyState === 4 && xhr.status === 404) {
+                        alert(this.responseText);
+                    }
+                };
+    
+                // Converting JSON data to string
+                var data = JSON.stringify({ "id": id });
+    
+                // Sending data with the request
+                xhr.send(data);
+            } else {
+                alert("Not Work");
+            }
+        }
+        function edit_task(id = 0) {
+            if(id != 0 & typeof id == "number") {
+                location.pathname = "/edit/" + id;
+            } else {
+                alert("Not Work");
+            }
+        }
+    </script>
+</body>
+</html>

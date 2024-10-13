@@ -1,7 +1,7 @@
 import streamlit as st
 from PIL import Image
 import random
-
+import pygame
 # Path to your card images folder
 card_images_path = 'card_images/'
 
@@ -47,7 +47,18 @@ def display_board(deck, flipped_cards, matched_cards):
             # Show the button to flip the card
             if col.button("", key=f"button-{i}"):  # Button click event
                 if len(st.session_state.flipped_cards) < 2:  # Allow flipping only if less than 2 cards are flipped
-                    st.session_state.flipped_cards.append(i)  # Add index to flipped cards
+                   
+                    st.session_state.flipped_cards.append(i)# Add index to flipped cards
+                     
+                    st.markdown(
+                        """
+                        <audio id="flipSound" src="/workspaces/Project_1_Python/audio_c/card_sound.mp3" autoplay></audio>
+                        <script>
+                        document.getElementById("flipSound").play();
+                        </script>
+                        """,
+                        unsafe_allow_html=True
+                      )
                     st.rerun() 
 
 # CSS to center align elements and add styling
